@@ -95,7 +95,7 @@ def check_for_path_obj(file_ref):
 def open_file(file_ref, **encoding_kwargs):
     """Open a file if necessary.
 
-    If ``autodetect_encoding=True`` then either ``cchardet`` or ``chardet``
+    If ``autodetect_encoding=True`` then either ``cchardet`` or ``chardet`` or ``pyuchardet``
     needs to be installed, or else an ``ImportError`` will be raised.
 
     Arguments:
@@ -238,7 +238,7 @@ def get_encoding(auto, raw):
 
     Arguments:
         auto (str): auto-detection of character encoding - can be either
-            'chardet', 'cchardet', False, or True (the latter will pick the
+            'chardet', 'cchardet', 'pyuchardet', False, or True (the latter will pick the
             fastest available option)
         raw (bytes): array of bytes to detect from
 
@@ -248,23 +248,29 @@ def get_encoding(auto, raw):
     """
     if auto is True:
         try:
-            import cchardet as chardet
-        except ImportError:
+            import pyuchardet as chardet
+        except:
             try:
-                import chardet
-            except ImportError:
-                logger.debug(
-                    "chardet or cchardet is recommended for automatic"
-                    " detection of character encodings. Instead trying some"
-                    " common encodings."
-                )
-                return None
+                import cchardet as chardet
+            except:
+                try:
+                    import chardet
+                except:
+                    logger.debug(
+                        "chardet, cchardet or pyuchardet is recommended for automatic"
+                        " detection of character encodings. Instead trying some"
+                        " common encodings."
+                    )
+                    return None
+                else:
+                    logger.debug("get_encoding Using chardet")
+                    method = "chardet"
             else:
-                logger.debug("get_encoding Using chardet")
-                method = "chardet"
+                logger.debug("get_encoding Using cchardet")
+                method = "cchardet"
         else:
-            logger.debug("get_encoding Using cchardet")
-            method = "cchardet"
+            logger.debug("get_encoding Using pyuchardet")
+            method = "pyuchardet"
     elif auto.lower() == "chardet":
         import chardet
 
@@ -275,10 +281,15 @@ def get_encoding(auto, raw):
 
         logger.debug("get_encoding Using cchardet")
         method = "cchardet"
+    elif auto.lower() == "pyuchardet":
+        import pyuchardet as chardet
+
+        logger.debug("get_encoding Using pyuchardet")
+        method = "pyuchardet"
     result = chardet.detect(raw)
     logger.debug(
         "{} method detected encoding of {} at confidence {}".format(
-            method, result["encoding"], result["confidence"]
+            method, result["encoding"], result.get("confidence", "[unknown]")
         )
     )
     return result["encoding"]
