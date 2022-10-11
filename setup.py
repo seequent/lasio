@@ -8,7 +8,7 @@ import os
 
 lasio_version = lasio.version()
 for line in fileinput.input('./lasio/las_version.py', inplace=True):
-   print(re.sub("^_las_version = \"\"$", f'_las_version = {lasio_version}', line), end='')
+   print(re.sub("^_las_version = \"\"$", f'_las_version = \'{lasio_version}\'', line), end='')
 
 EXTRA_REQS = ("pandas", "cchardet", "openpyxl")
 TEST_REQS = (
