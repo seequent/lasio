@@ -8,9 +8,15 @@ logger = logging.getLogger(__name__)
 # d[year][month][day] example: 20200420
 ver_date = datetime.now().strftime("d%Y%m%d")
 
+_las_version = ""
+
 
 def version():
-    las_version = ""
+    global _las_version
+
+    las_version = _las_version
+    if las_version:
+        return las_version
 
     """
     Look for distribution version
@@ -51,6 +57,7 @@ def version():
     if not las_version.strip():
         las_version = "0.26.0.dev0+unknown-post-dist-version.{}".format(ver_date)
 
+    _las_version = las_version
     return las_version
 
 
