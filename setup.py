@@ -1,6 +1,7 @@
 """Setup script for lasio"""
 
 import lasio
+import re
 from setuptools import setup
 import os
 
@@ -8,7 +9,10 @@ __init__file = os.path.join('lasio', '__init__.py')
 with open(__init__file, 'r') as f:
     file_contents = f.read()
 
-changed_file_contents = file_contents.replace('__version__ = version()', f'__version__ = \'{lasio.version()}\'')
+changed_file_contents = re.sub(r"(__version__\s?=\s?)[\"\'\w()]+", fr"""\g<1>'{lasio.version()}'""", file_contents)
+
+if changed_file_contents == file_contents:
+    raise Exception("Failed to replace version call with hardcoded value. See LF-46097")
 
 with open(__init__file, 'w') as f:
     f.write(changed_file_contents)
