@@ -9,7 +9,7 @@ __init__file = os.path.join('lasio', '__init__.py')
 with open(__init__file, 'r') as f:
     file_contents = f.read()
 
-changed_file_contents = re.sub(r"(__version__\s?=\s?)[\"\'\w()]+", fr"""\g<1>'{lasio.version()}'""", file_contents)
+changed_file_contents = re.sub("__version__.*", f"___version___ = \'{lasio.version()}\'", file_contents)
 
 if changed_file_contents == file_contents:
     raise Exception("Failed to replace version call with hardcoded value. See LF-46097")
