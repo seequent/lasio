@@ -10,7 +10,7 @@ with open('./lasio/__init__.py', 'r') as f:
 changed_file_contents = file_contents.replace('__version__ = version()', f'__version__ = \'{lasio.version()}\'')
 
 with open('./lasio/__init__.py', 'w') as f:
-    file_contents = f.write(changed_file_contents)
+    f.write(changed_file_contents)
 
 EXTRA_REQS = ("pandas", "cchardet", "openpyxl")
 TEST_REQS = (
