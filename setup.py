@@ -1,14 +1,16 @@
 """Setup script for lasio"""
 
-import fileinput
 import lasio
-import re
 from setuptools import setup
 import os
 
-lasio_version = lasio.version()
-for line in fileinput.input('./lasio/__init__.py', inplace=True):
-   print(re.sub("^(__version__ = )version\(\)$", f'\g<1>\'{lasio_version}\'', line), end='')
+with open('./lasio/__init__.py', 'r') as f:
+    file_contents = f.read()
+
+changed_file_contents = file_contents.replace('__version__ = version()', f'__version__ = \'{lasio.version()}\'')
+
+with open('./lasio/__init__.py', 'w') as f:
+    file_contents = f.write(changed_file_contents)
 
 EXTRA_REQS = ("pandas", "cchardet", "openpyxl")
 TEST_REQS = (
