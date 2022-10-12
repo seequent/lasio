@@ -51,7 +51,6 @@ def version():
     if not las_version.strip():
         las_version = "0.26.0.dev0+unknown-post-dist-version.{}".format(ver_date)
 
-    _las_version = las_version
     return las_version
 
 
