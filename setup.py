@@ -4,7 +4,7 @@ import lasio
 from setuptools import setup
 import os
 
-__init__file = './lasio/__init__.py'
+__init__file = os.path.join('lasio', '__init__.py')
 with open(__init__file, 'r') as f:
     file_contents = f.read()
 
