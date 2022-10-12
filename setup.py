@@ -4,12 +4,13 @@ import lasio
 from setuptools import setup
 import os
 
-with open('./lasio/__init__.py', 'r') as f:
+__init__file = './lasio/__init__.py'
+with open(__init__file, 'r') as f:
     file_contents = f.read()
 
 changed_file_contents = file_contents.replace('__version__ = version()', f'__version__ = \'{lasio.version()}\'')
 
-with open('./lasio/__init__.py', 'w') as f:
+with open(__init__file, 'w') as f:
     f.write(changed_file_contents)
 
 EXTRA_REQS = ("pandas", "cchardet", "openpyxl")
