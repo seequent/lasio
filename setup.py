@@ -1,7 +1,23 @@
 """Setup script for lasio"""
 
+import re
 from setuptools import setup
 import os
+
+if 'LASIO_VERSION' in os.environ:
+    lasio_version = os.environ['LASIO_VERSION']
+    __init__file = os.path.join('lasio', '__init__.py')
+
+    with open(__init__file, 'r') as f:
+        file_contents = f.read()
+
+    changed_file_contents, n = re.subn("__version__.+", f"__version__ = \'{lasio_version}\'", file_contents)
+
+    if n == 0:
+        raise Exception("Failed to find and replace the library version. See LF-46097")
+
+    with open(__init__file, 'w') as f:
+        f.write(changed_file_contents)
 
 EXTRA_REQS = ("pandas", "cchardet", "openpyxl")
 TEST_REQS = (
